@@ -1,0 +1,38 @@
+Microsoft Power BI
+
+let
+    Source = AzureStorage.Blobs("s3reports"),
+    lake1 = Source{[Name="lake"]}[Data],
+    
+    CallLogContents = Table.TransformColumns(lake1,{{"Content", Json.Document}}),
+    Content1 = CallLogContents{[#"Folder Path"="https://s3reports.blob.core.windows.net/lake/",Name="DATALAKE/CallLog/2018-10-22T22:20:00.0000000Z 2018-10-22T22:25:00.0000000Z.json"]}[Content],
+    Content2 = List.Transform(Content1, Json.Document),
+    Content3 = Table.FromRecords(Content2)
+in
+    Content3
+	
+
+let
+    Source = AzureStorage.Blobs("s3reports"),
+    lake1 = Source{[Name="lake"]}[Data],
+    
+    CallLogContents = Table.TransformColumns(lake1,{{"Content", Json.Document}}),
+    AllContent = List.Transform(CallLogContents[Content], (blobData) => Table.FromRecords(List.Transform(blobData, Json.Document))),
+
+    Content1 = CallLogContents{[#"Folder Path"="https://s3reports.blob.core.windows.net/lake/",Name="DATALAKE/CallLog/2018-10-22T22:20:00.0000000Z 2018-10-22T22:25:00.0000000Z.json"]}[Content],
+    Content2 = List.Transform(Content1, Json.Document),
+    Content3 = Table.FromRecords(Content2)
+in
+    Content3
+	
+
+	-- All Records from the json data
+let
+    Source = AzureStorage.Blobs("s3reports"),
+    lake1 = Source{[Name="lake"]}[Data],
+    
+    CallLogContents = Table.TransformColumns(lake1,{{"Content", Json.Document}}),
+    AllContent = List.Transform(CallLogContents[Content], (blobData) => Table.FromRecords(List.Transform(blobData, Json.Document))),
+	OutputTable = Table.Combine(AllContent)
+in
+    OutputTable

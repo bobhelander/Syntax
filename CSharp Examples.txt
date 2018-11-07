@@ -1,0 +1,10 @@
+RX (http://www.introtorx.com)
+
+using System.Reactive.Linq;
+var subscription = SharedState.GearChanged.Subscribe(x => ffb2.CallActivateButton(vJoyTypes.Virtual, MappedButtons.LandingGearToggle, 200));
+
+Newtonsoft JSON
+
+string json = JsonConvert.SerializeObject(dataObject);
+var dataObject = JsonConvert.DeserializeObject<DataObject>(json);
+dynamic dyn = = JsonConvert.DeserializeObject(json);

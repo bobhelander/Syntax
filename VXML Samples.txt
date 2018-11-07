@@ -1,0 +1,34 @@
+VXML Samples
+
+
+            <log> Local Vars </log>
+            <log> SessionId " <value expr="SessionId" /> </log>
+            <log> Dnis " <value expr="Dnis" /> </log>
+            <log> Ani " <value expr="Ani" /> </log>
+
+            <log> Session Vars </log>
+            <log> session " <value expr="[i for(i in session)]" /> </log>
+            <log> session.telephone " <value expr="[i for(i in session.telephone)]" /> </log>
+            <log> session.telephone.dnis " <value expr="session.telephone.dnis" /> </log>
+            <log> session.connection " <value expr="[i for(i in session.connection)]" /> </log>
+            <log> session.connection.info " <value expr="[i for(i in session.connection.info)]" /> </log>
+            <log> session.connection.aai " <value expr="session.connection.aai" /> </log>
+            <log> session.connection.local " <value expr="[i for(i in session.connection.local)]" /> </log>
+            <log> session.connection.local.uri " <value expr="session.connection.local.uri" /> </log>
+            <log> session.connection.remote " <value expr="[i for(i in session.connection.remote)]" /> </log>
+            <log> session.connection.remote.uri " <value expr="session.connection.remote.uri" /> </log>
+            <log> session.connection.redirect " <value expr="session.connection.redirect" /> </log>
+            <log> session.application " <value expr="[i for(i in session.application)]" /> </log>
+            <log> session.query " <value expr="[i for(i in session.query)]" /> </log>
+            <log> session.uri " <value expr="session.uri" /> </log>
+            <log> session.job " <value expr="[i for(i in session.job)]" /> </log>
+            <log> session.sipport " <value expr="[i for(i in session.sipport)]" /> </log>
+            <log> session.release " <value expr="[i for(i in session.release)]" /> </log>
+            <log> session.registrations " <value expr="[i for(i in session.registrations)]" /> </log>
+
+            <log> document " <value expr="[i for(i in document)]" /> </log>
+            <log> document.application " <value expr="[i for(i in document.application)]" /> </log>
+            <log> document.document " <value expr="[i for(i in document.document)]" /> </log>
+            <log> document.vvb " <value expr="[i for(i in document.vvb)]" /> </log>
+            <log> document.browser " <value expr="[i for(i in document.browser)]" /> </log>
+            <log> document.dialog " <value expr="[i for(i in document.dialog)]" /> </log>
