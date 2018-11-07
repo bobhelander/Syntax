@@ -1,0 +1,8 @@
+New repo
+
+git init
+
+attach to remote 
+
+git remote add origin https://github.com/remote.git
+git push -u origin master

@@ -8,3 +8,14 @@ Newtonsoft JSON
 string json = JsonConvert.SerializeObject(dataObject);
 var dataObject = JsonConvert.DeserializeObject<DataObject>(json);
 dynamic dyn = = JsonConvert.DeserializeObject(json);
+
+async/await
+
+continuations
+
+Task.Run(async () => await MethodAsync(param1, param1)).ContinueWith(t => { log.Error($"Exception: {t.Exception}"); }, TaskContinuationOptions.OnlyOnFaulted);
+
+
+log4net
+
+private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
