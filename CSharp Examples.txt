@@ -3,6 +3,17 @@ RX (http://www.introtorx.com)
 using System.Reactive.Linq;
 var subscription = SharedState.GearChanged.Subscribe(x => ffb2.CallActivateButton(vJoyTypes.Virtual, MappedButtons.LandingGearToggle, 200));
 
+ffb2.Subscribe(x => {
+                var current = x.Current as State;
+                var previous = x.Previous as State;
+
+                if (TestButtonReleased(previous.buttons, current.buttons, (uint)Button.Button25))
+                {
+                    CallActivateButton(vJoyTypes.Virtual, MappedButtons.Throttle75, 200);
+                    log.Debug("75% throttle");
+                }
+            });
+
 Newtonsoft JSON
 
 string json = JsonConvert.SerializeObject(dataObject);
@@ -19,3 +30,75 @@ Task.Run(async () => await MethodAsync(param1, param1)).ContinueWith(t => { log.
 log4net
 
 private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+Streaming JSON Serializer
+
+		class OutputStringWriter : StringWriter
+        {
+            private StringWriter InternalBuffer { get; set; } = new StringWriter();
+
+            public override void Write(char value)
+            {
+                InternalBuffer.Write(value);
+            }
+            public override void Write(char[] buffer, int index, int count)
+            {
+                InternalBuffer.Write(buffer, index, count);
+            }
+            public override void Write(string value)
+            {
+                InternalBuffer.Write(value);
+            }
+
+            public string GetBuffer()
+            {
+                var text = InternalBuffer.ToString();
+                InternalBuffer = new StringWriter();
+                return text;
+            }
+        }
+		
+		public async Task<IEnumerable<byte[]>> ReadBytes()
+        {
+            return await Task.FromResult(ReadLines(TextReader));
+        }
+		
+		private static IEnumerable<byte[]> ReadLines(TextReader textReader)
+        {
+            OutputStringWriter sw = new OutputStringWriter();
+            JsonTextWriter writer = new JsonTextWriter(sw);
+            
+            // Output the beginning of the array
+            writer.WriteStartArray();
+            
+            while (true)
+            {
+                var line = textReader.ReadLine();
+
+                if (null == line) break;  // Done reading
+
+                // Output the JSON object start character
+                writer.WriteStartObject();
+
+				// Write the key:value data
+				writer.WritePropertyName("key");
+				writer.WriteValue("value");
+
+                // Close the JSON object
+                writer.WriteEndObject();
+
+                // Return the formatted JSON to the caller
+                yield return Encoding.UTF8.GetBytes(sw.GetBuffer());
+            }
+
+            // Close the array
+            writer.WriteEndArray();
+
+            // Return the formatted JSON to the caller
+            yield return Encoding.UTF8.GetBytes(sw.GetBuffer());
+        }
+		
+		foreach(var byteArray in await reader.ReadBytes())
+        {
+			await output.WriteAsync(byteArray);
+        }
