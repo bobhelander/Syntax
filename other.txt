@@ -1,0 +1,51 @@
+
+blocks.Where(x => x is MyRefinery)
+
+InputInventory.GetItems()
+OutputInventory.GetItems()
+
+MyAssembler
+
+OutputInventory.GetItems()
+
+MyReactor
+
+GetInventory().GetItems()
+
+
+
+
+HasInventory
+
+if (GetInventoryBase().GetInventoryCount() > 1)
+	// Embedded inventory
+	
+subInventory
+
+mInventoryBase.IterateInventory(index,)
+
+
+var cargo = inv as MyEntity;
+
+if (cargo != null && cargo.HasInventory)
+{
+	System.Diagnostics.Debug.Assert((cargo.GetInventory(0) as MyInventory) != null, "Null or other inventory type!");
+
+	var flags = (cargo.GetInventory(0) as MyInventory).GetFlags();
+	var flag = MyInventoryFlags.CanSend | MyInventoryFlags.CanReceive;
+	List<MyInventory> inventories = new List<MyInventory>();
+
+	for (int i = 0; i < cargo.InventoryCount; i++)
+	{
+		System.Diagnostics.Debug.Assert((cargo.GetInventory(i) as MyInventory) != null, "Null or other inventory type!");
+		inventories.Add(cargo.GetInventory(i) as MyInventory);
+	}
+
+	foreach (var inventory in inventories)
+	{
+		if (inventory.ContainItems(amount, contentId) && ((flags == flag || flags == MyInventoryFlags.CanSend) || cargo == this))
+		{
+			return true;
+		}
+	}
+}
