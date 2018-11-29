@@ -102,3 +102,14 @@ Streaming JSON Serializer
         {
 			await output.WriteAsync(byteArray);
         }
+		
+		
+		
+Linq find with custom default value if empty
+
+	var result = Enumerable.Where(x => x.value == "value").Select(x => x.key).DefaultIfEmpty("not found").First();
+	
+
+Linq out variables from TryParse
+
+	var results = ["1", "2", "a"].Select(x => { Int32.TryParse(x, out var value); return value; }).Where(x => x != null);
