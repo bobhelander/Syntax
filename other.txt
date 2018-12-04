@@ -49,3 +49,10 @@ if (cargo != null && cargo.HasInventory)
 		}
 	}
 }
+
+var test = items.GroupBy(x => x.value1).ToDictionary(groupby => groupby.Key, groupby => groupby.Sum(x => x.value2));
+//Console.WriteLine(string.Join(", ", test.Values));
+Console.WriteLine(string.Join(", ", test.Keys.Select(x => $"{x}: {test[x]}")));
+
+
+
