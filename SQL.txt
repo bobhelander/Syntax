@@ -1,0 +1,36 @@
+Get the latest entry for each grouping by using "windowing (OVER)" and "PARTITION BY"
+
+Needed the latest order for each name with the same phone number
+
+SELECT * FROM Orders INNER JOIN (
+	SELECT *, 
+		ROW_NUMBER() -- Number the rows coming out of the subquery
+		OVER (   -- Windowing 
+			PARTITION BY -- Group the results and restart the rownumber when in a new group
+				firstName, lastName ORDER BY orders.timePlaced DESC  -- Group the results by name and then put the latest order first
+		) AS RowNum  -- This is the 1-n rownumber.  If I wanted the second to last I would select "2"
+	FROM orders
+	WHERE orders.brand = 'brand-name' AND orders.phoneNumber = 'phone-number' AND orders.timePlaced > '2020-09-01'
+) AS T1 
+ON Orders.Id = T1.Id AND T1.RowNum = 1  -- Join back to the table and only select the first row from the windowed results
+
+
+This was an attempt at the same thing using SQL Server Recursive CTE (common table expression)
+
+WITH cte_output AS (
+	SELECT firstName, lastName, phoneNumber 
+	FROM orders 
+	WHERE brand = 'brand-name' AND phoneNumber = 'phone-number' AND timePlaced > '2020-09-01'
+	GROUP BY phoneNumber, firstName, lastName  -- Anchor Query.  For Each row in this query.  It should return every unique name for this phone number
+UNION ALL
+    SELECT TOP 1 orders.* -- I want the first row returned
+	FROM Orders 
+	INNER JOIN cte_output AS T1 -- Attempt to join to the rows of the Anchor query.
+	ON orders.phoneNumber = T1.phoneNumber AND Orders.firstName = T1.firstName AND Orders.lastName = T1.lastName
+	WHERE orders.brand = 'brand-name' AND orders.phoneNumber = 'phone-number' AND orders.timePlaced > '2020-09-01'  -- make sure we don't use the full table
+	ORDER BY orders.timePlaced DESC, orders.firstName, orders.lastName  -- The last order should be first
+)
+SELECT firstname FROM cte_output;
+
+NOTE:  The above does not work.  I cannot use the TOP() command and the UNION ALL requires the same columns.
+
