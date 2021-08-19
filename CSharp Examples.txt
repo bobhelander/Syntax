@@ -27,6 +27,32 @@ continuations
 Task.Run(async () => await MethodAsync(param1, param1)).ContinueWith(t => { log.Error($"Exception: {t.Exception}"); }, TaskContinuationOptions.OnlyOnFaulted);
 
 
+var someTask = MethodAsync().ContinueWith(async (t) =>
+{
+	if (t.IsCanceled)
+	{
+		logger.LogWarning($"MethodAsync: canceled");
+	}
+	else if (t.IsFaulted)
+	{
+		// Logging and Auditing 
+
+		// Pull the innermost exception
+		Exception ex = t.Exception;
+		while (ex is AggregateException && ex.InnerException != null)
+			ex = ex.InnerException;
+
+		logger.LogError(t.Exception, $"MethodAsync: Error, Message {ex}");
+	}
+	else if (t.IsCompleted)
+	{
+		logger.LogDebug("MethodAsync: completed");
+		await SomeOtherAsync().ConfigureAwait(false);
+	}
+}
+
+await someTask.ConfigureAwait(false);
+
 log4net
 
 private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
