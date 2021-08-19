@@ -53,6 +53,8 @@ var someTask = MethodAsync().ContinueWith(async (t) =>
 
 await someTask.ConfigureAwait(false);
 
+
+
 log4net
 
 private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
