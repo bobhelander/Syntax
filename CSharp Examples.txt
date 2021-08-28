@@ -54,6 +54,19 @@ var someTask = MethodAsync().ContinueWith(async (t) =>
 await someTask.ConfigureAwait(false);
 
 
+// Using Task.Factory.StartNew() correctly
+
+// StartNew wraps the task.  Call Unwrap() to get the real task.
+startNewTask = Task.Factory.StartNew(async () => await SomeAsync(CancellationTokenSource.Token).ConfigureAwait(false),
+    CancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
+
+// Log all the ways that this can stop
+startNewTask.ContinueWith(t => {
+    if (t.IsCanceled) logger?.LogDebug("SomeAsync() cancelled");
+    else if (t.IsFaulted) logger?.LogError($"SomeAsync() Exception: {t.Exception.InnerException?.Message}");
+    else logger?.LogDebug("SomeAsync() complete");
+});
+
 
 log4net
 
